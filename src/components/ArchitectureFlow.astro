@@ -1,0 +1,12 @@
+---
+const { steps } = Astro.props as { steps: string[] };
+---
+
+<ol class="architecture-flow" aria-label="Architecture flow">
+  {steps.map((step, index) => (
+    <li>
+      <span class="flow-index">{String(index + 1).padStart(2, '0')}</span>
+      <strong>{step}</strong>
+    </li>
+  ))}
+</ol>

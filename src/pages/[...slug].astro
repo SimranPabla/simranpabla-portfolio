@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArchitectureFlow from '../components/ArchitectureFlow.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { links, projects, routes } from '../content/site';
+
+export function getStaticPaths() {
+  return routes.filter(Boolean).map((slug) => ({ params: { slug } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const project = slug.startsWith('work/') ? projects.find((item) => `work/${item.slug}` === slug) : undefined;
+const titles: Record<string, string> = {
+  work: 'Selected Work',
+  'open-source': 'Open Source',
+  about: 'About',
+  resume: 'Resume',
+  contact: 'Contact',
+};
+const title = project?.name ?? titles[slug] ?? 'Simranjit Singh';
+---
+
+<BaseLayout title={`${title} | Simranjit Singh`}>
+  {project ? (
+    <>
+      <section class="page-hero shell project-hero">
+        <a class="back-link" href="/work">← Selected work</a>
+        <p class="kicker">{project.eyebrow}</p>
+        <h1>{project.name}</h1>
+        <p class="page-lede">{project.summary}</p>
+        <div class="status-line"><span>Status</span><strong>{project.status}</strong></div>
+        <ul class="tag-list large">{project.stack.map((item) => <li>{item}</li>)}</ul>
+      </section>
+      <section class="evidence-strip">
+        <div class="shell evidence-grid">
+          {project.evidence.map((item) => <div><span>{item.label}</span><strong>{item.value}</strong></div>)}
+        </div>
+      </section>
+      <section class="case-section shell split-copy">
+        <p class="section-number">01 / Problem</p>
+        <div><h2>Why this system exists</h2><p class="large-copy">{project.problem}</p></div>
+      </section>
+      <section class="case-section dark-section">
+        <div class="shell split-copy">
+          <p class="section-number">02 / Architecture</p>
+          <div><h2>How state moves</h2><ArchitectureFlow steps={project.architecture} /></div>
+        </div>
+      </section>
+      <section class="case-section shell split-copy">
+        <p class="section-number">03 / Decisions</p>
+        <div><h2>Engineering choices</h2><ul class="decision-list">{project.decisions.map((item) => <li>{item}</li>)}</ul></div>
+      </section>
+      <section class="case-section shell split-copy boundary-section">
+        <p class="section-number">04 / Boundaries</p>
+        <div><h2>What this does not claim</h2><ul class="boundary-list">{project.boundaries.map((item) => <li>{item}</li>)}</ul></div>
+      </section>
+      <section class="project-cta"><div class="shell"><h2>See the code and documentation.</h2>{project.source && <a class="button inverse" href={project.source}>View repository ↗</a>}</div></section>
+    </>
+  ) : slug === 'work' ? (
+    <section class="page-hero shell"><p class="kicker">Selected engineering work</p><h1>Projects</h1><p class="page-lede">Five projects with their architecture, engineering decisions, current status, and limitations.</p><div class="project-grid page-grid">{projects.map((item, index) => <ProjectCard project={item} featured={index === 0} />)}</div></section>
+  ) : slug === 'open-source' ? (
+    <section class="page-hero shell"><p class="kicker">Open source</p><h1>Open-source contributions</h1><p class="page-lede">Merged code and public issue analysis in projects I use and study.</p><div class="story-grid"><article><span class="eyebrow">Merged upstream contribution</span><h2>OpenClaw</h2><p>Fixed Linux gateway restart failures caused by inherited cross-user D-Bus state, added regression coverage, and validated 36 focused tests.</p><a class="text-link" href="https://github.com/openclaw/openclaw/pull/111534">View merged PR #111534 ↗</a></article><article><span class="eyebrow">Governance analysis</span><h2>Google CAGE</h2><p>Reported that human review and insufficient-context deferral could be represented by the same external state, making the two outcomes difficult to distinguish.</p><a class="text-link" href="https://github.com/google/cybernetic-agent-governance-engine/issues/53">View issue #53 ↗</a></article></div></section>
+  ) : slug === 'about' ? (
+    <section class="page-hero shell narrow-page"><p class="kicker">About</p><h1>I’m interested in software that makes failures visible and recoverable.</h1><p class="page-lede">I’m a University of Alberta Computing Science student, founder, and certified cybersecurity practitioner focused on software engineering, AI systems, and security.</p><div class="prose"><p>My projects include API automation, AI-agent controls, network analysis, and background media processing.</p><p>My Computer Systems Technician diploma and cybersecurity training shape how I approach software: define boundaries, expose system state, handle failures, and account for security during design.</p><h2>What I’m looking for</h2><p>Canadian internship and co-op roles in backend, full-stack, security, infrastructure, or applied AI engineering.</p></div></section>
+  ) : slug === 'resume' ? (
+    <section class="page-hero shell resume-page"><p class="kicker">Resume</p><h1>Software engineering with a systems and security lens.</h1><p class="page-lede">Computing Science student, founder, and open-source contributor based in Edmonton, Alberta.</p><div class="resume-actions"><a class="text-link" href={links.linkedin}>LinkedIn ↗</a><a class="text-link" href={links.github}>GitHub ↗</a><a class="button primary" href={links.resume} download>Resume ↓</a><a class="text-link" href={links.email}>Email ↗</a></div><div class="resume-grid"><aside><h2>Core tools</h2><p>Python · TypeScript · JavaScript · SQL · Bash · Linux · Docker · Flask · REST APIs</p><h2>Certifications</h2><p>CompTIA Security+ · CompTIA A+ · ISC2 CC · EC-Council CCT · TryHackMe Top 2%</p><h2>Contact</h2><p><a class="text-link" href={links.linkedin}>LinkedIn</a><br /><a class="text-link" href={links.github}>GitHub</a><br /><a class="text-link" href={links.resume} download>Resume</a><br /><a class="text-link" href={links.email}>Email</a></p></aside><div><h2>Experience</h2><article class="resume-item"><h3>Founder &amp; Software Developer · CyberFlow Sentinel</h3><small>January 2023 — Present</small><p>Built and operated an end-to-end cybersecurity automation platform processing 50+ articles per day, cutting manual processing by approximately 90%, and supporting content seen by approximately 10,000 weekly viewers.</p></article><article class="resume-item"><h3>Customer Service Supervisor · A&amp;W</h3><small>July 2022 — August 2025</small></article><article class="resume-item"><h3>Security Officer · ISSA</h3><small>January 2021 — July 2022</small></article><h2>Selected work</h2>{projects.map((item) => <article class="resume-item"><h3>{item.name}</h3><p>{item.summary}</p><small>{item.status}</small></article>)}<h2>Education</h2><article class="resume-item"><h3>University of Alberta</h3><p>B.Sc. Computing Science · Expected April 2029 · GPA 3.4/4.0</p><small>CMPUT 174 (A−) · CMPUT 175 (A+) · STAT 252 (A) · CMPUT 201 and 204 in progress</small></article><article class="resume-item"><h3>Centennial College</h3><p>Computer Systems Technician, Networking · 2020</p></article></div></div><div class="resume-download"><p>Prefer the original document?</p><a class="button primary" href={links.resume} download>Download resume PDF ↓</a></div></section>
+  ) : (
+    <section class="page-hero shell contact-page"><p class="kicker">Contact</p><h1>Get in touch</h1><p class="page-lede">For internships, open-source work, or technical collaboration, email is the fastest way to reach me.</p><div class="contact-links"><a href={links.linkedin}><span>LinkedIn</span><strong>simranjit-singh-pabla</strong><b>↗</b></a><a href={links.github}><span>GitHub</span><strong>github.com/SimranPabla</strong><b>↗</b></a><a href={links.resume} download><span>Resume</span><strong>Download PDF</strong><b>↓</b></a><a href={links.email}><span>Email</span><strong>singhsimranjit9192@gmail.com</strong><b>↗</b></a></div></section>
+  )}
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import type { Project } from '../content/site';
+const { project, featured = false } = Astro.props as { project: Project; featured?: boolean };
+---
+
+<a class:list={['project-card', { featured }]} href={`/work/${project.slug}`} aria-label={`View ${project.name} case study`}>
+  <div class="card-topline">
+    <span class="eyebrow">{project.eyebrow}</span>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </div>
+  <h3>{project.name}</h3>
+  <p>{project.summary}</p>
+  <ul class="tag-list" aria-label={`${project.name} technologies`}>
+    {project.stack.slice(0, 4).map((item) => <li>{item}</li>)}
+  </ul>
+</a>

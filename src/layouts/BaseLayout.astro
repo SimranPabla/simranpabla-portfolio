@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import { links } from '../content/site';
+
+interface Props { title?: string; description?: string; }
+
+const {
+  title = 'Simranjit Singh | Software Engineering, AI Systems & Cybersecurity',
+  description = 'Portfolio of Simranjit Singh Pabla, a Computing Science student and founder working across AI systems, cybersecurity, automation, and backend engineering.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#07090c" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <title>{title}</title>
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') document.documentElement.dataset.theme = savedTheme;
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="floating-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/#home" aria-label="Simranjit Singh home"><span class="brand-mark" aria-hidden="true">S</span><span>SIMRAN.PABLA</span></a>
+        <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation">
+          <a href="/#experience">Experience</a><a href="/#projects">Projects</a><a href="/#about">About</a><a href="/#skills">Skills</a><a href="/#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="icon-button theme-toggle" type="button" aria-label="Switch to light theme" title="Change colour theme"><span aria-hidden="true">☼</span></button>
+          <button class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><span aria-hidden="true">≡</span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer"><div class="shell footer-inner"><p>Designed and built by Simran Pabla.</p><div><a href={links.linkedin}>LinkedIn</a><a href={links.github}>GitHub</a><a href={links.resume} download>Resume</a><a href={links.email}>Email</a></div></div></footer>
+    <script is:inline>
+      const root = document.documentElement;
+      const themeButton = document.querySelector('.theme-toggle');
+      const menuButton = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.primary-nav');
+      function syncThemeLabel() {
+        const light = root.dataset.theme === 'light';
+        themeButton?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+        if (themeButton) themeButton.querySelector('span').textContent = light ? '☾' : '☼';
+      }
+      themeButton?.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('theme', root.dataset.theme);
+        syncThemeLabel();
+      });
+      menuButton?.addEventListener('click', () => {
+        const open = menuButton.getAttribute('aria-expanded') !== 'true';
+        menuButton.setAttribute('aria-expanded', String(open));
+        menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+        nav?.classList.toggle('is-open', open);
+      });
+      nav?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+        menuButton?.setAttribute('aria-expanded', 'false');
+        menuButton?.setAttribute('aria-label', 'Open navigation');
+        nav?.classList.remove('is-open');
+      }));
+      syncThemeLabel();
+    </script>
+  </body>
+</html>
