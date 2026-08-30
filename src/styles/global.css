@@ -63,6 +63,13 @@
 .resume-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem}
 .resume-download{margin-top:3.5rem;padding:1.5rem;border:1px solid var(--line);border-radius:1rem;background:var(--panel);display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .resume-download p{margin:0}
+/* Desktop reading sizes: enlarge long-form copy and technology pills without changing mobile. */
+@media(min-width:48.0625rem){
+  .hero-summary,.section-intro,.timeline-item li,.feature-card p,.project-card p,.story-grid p,.prose p,.resume-item p,.resume-grid aside,.notice,.contact-cards span{font-size:1.0625rem}
+  .mini-project p,.skill-grid p{font-size:1rem}
+  .about-copy p{font-size:1.125rem}
+  .tags li,.tag-list li{font-size:.75rem;padding:.55rem .8rem}
+}
 @media(max-width:40rem){
   .resume-download{display:block}
   .resume-download .button{margin-top:1rem;width:100%}
