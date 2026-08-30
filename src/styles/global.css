@@ -10,7 +10,9 @@
 /* Responsive layout corrections: content-driven sizing and aligned navigation. */
 @media(min-width:60.0625rem){
   .nav-shell{display:grid;grid-template-columns:1fr auto 1fr}
+  .brand{font-size:.875rem}
   .primary-nav{justify-content:center;margin-left:0;gap:clamp(.85rem,2.2vw,1.8rem)}
+  .primary-nav{font-size:.9375rem}
   .nav-actions{justify-content:flex-end}
 }
 .featured-projects{gap:.85rem}
